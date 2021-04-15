@@ -10,7 +10,10 @@ export const userActions = {
     getAll,
     delete: _delete,
     resetPassword,
-    updateProfile
+    updateProfile,
+    addUser,
+    getById
+    // editUser
 };
 
 function login(email, password) {
@@ -63,6 +66,30 @@ function register(user) {
     function failure(error) { return { type: userConstants.REGISTER_FAILURE, error } }
 }
 
+function addUser(user) {
+    return dispatch => {
+        dispatch(request(user));
+
+        userService.register(user)
+            .then(
+                user => { 
+                    dispatch(success());
+                    history.push('/');
+                    dispatch(alertActions.success('User added successfully'));
+                },
+                error => {
+                    dispatch(failure(error.toString()));
+                    dispatch(alertActions.error(error.toString()));
+                }
+            );
+    };
+
+    function request(user) { return { type: userConstants.REGISTER_REQUEST, user } }
+    function success(user) { return { type: userConstants.REGISTER_SUCCESS, user } }
+    function failure(error) { return { type: userConstants.REGISTER_FAILURE, error } }
+}
+
+
 function getAll() {
     return dispatch => {
         dispatch(request());
@@ -101,7 +128,7 @@ function resetPassword(email) {
         userService.resetPassword(email)
             .then(
                 user => { 
-                    dispatch(success()); 
+                    dispatch(success(user)); 
                     history.push('/login');
                     dispatch(alertActions.success('Password sent to your email id.'));
                     //history.push('/');
@@ -114,7 +141,7 @@ function resetPassword(email) {
     };
 
     function request(user) { return { type: userConstants.RESTPWD_REQUEST, user } }
-    function success() { return { type: userConstants.RESTPWD_SUCCESS, user } }
+    function success(user) { return { type: userConstants.RESTPWD_SUCCESS, user } }
     function failure(error) { return { type: userConstants.RESTPWD_FAILURE, error } }
 }
 
@@ -125,7 +152,7 @@ function updateProfile(user) {
             .then(
                 user => { 
                     dispatch(success(user));
-                   // history.push('/');
+                   history.push('/');
                     dispatch(alertActions.success('Profile updated successfully'));
                 },
                 error => {
@@ -139,3 +166,44 @@ function updateProfile(user) {
     function success(user) { return { type: userConstants.REGISTER_SUCCESS, user } }
     function failure(error) { return { type: userConstants.REGISTER_FAILURE, error } }
 }
+
+
+function getById(id) {
+    return dispatch => {
+        dispatch(request(id));
+
+        userService.getById(id)
+            .then(
+                user => dispatch(success(user)),
+                error => dispatch(failure(error.toString()))
+            );
+    };
+
+    function request() { return { type: userConstants. GETBYID_REQUEST } }
+    function success(user) { return { type: userConstants. GETBYID_SUCCESS, user } }
+    function failure(error) { return { type: userConstants. GETBYID_FAILURE, error } }
+}
+
+
+
+// function editUser(id,user) {
+//     return dispatch => {
+//         dispatch(request(id));
+//         userService.editUser(id)
+//             .then(
+//                 user => { 
+//                 dispatch(success(user));
+//                    history.push('/');
+//                     dispatch(alertActions.success('Profile updated successfully'));
+//                 },
+//                 error => {
+//                     dispatch(failure(error.toString()));
+//                     dispatch(alertActions.error(error.toString()));
+//                 }
+//             );
+//     };
+
+//     function request(user) { return { type: userConstants.REGISTER_REQUEST, user } }
+//     function success(user) { return { type: userConstants.REGISTER_SUCCESS, user } }
+//     function failure(error) { return { type: userConstants.REGISTER_FAILURE, error } }
+// }

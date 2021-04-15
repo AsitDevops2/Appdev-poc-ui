@@ -10,17 +10,19 @@ class ProfilePage extends React.Component {
         const { user } = this.props;
         this.state = {
             user: {
+                id: this.props.match.params.id,
                 firstName: '',
                 lastName: '',
                 email: '',
-                mobileNo:null,
+                mobile:'',
                 country:'',
                 state:'',
                 city:'',
                 pin:'',
                 dept:'',
-                addrLand1:'',
-                addrLand2:''
+                addr1:'',
+                addr2:'',
+                role:''
             },
             submitted: false,
             errors: {}
@@ -30,6 +32,14 @@ class ProfilePage extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
+    componentDidMount(){
+        let id=this.props.match.params.id;
+        // this.setState({
+        //     id:id            
+        // },console.log(id));
+       
+            this.props.getById(this.state.id);
+    }
     handleChange(event) {
         const { name, value } = event.target;
         const { user } = this.state;
@@ -53,18 +63,18 @@ class ProfilePage extends React.Component {
             errors["email"] = "Please enter valid email address.";
           }
         }
-        if (typeof input["mobileNo"] !== "undefined") {
+        if (typeof input["mobile"] !== "undefined") {
 
             var pattern = new RegExp(/^[0-9\b]+$/);
-            if (!pattern.test(input["mobileNo"])) {
+            if (!pattern.test(input["mobile"])) {
               isValid = false;
-              errors["mobileNo"] = "Please enter only number.";
-            }else if(typeof input["mobileNo"] != 'number' && input["mobileNo"].length != 10){
+              errors["mobile"] = "Please enter only number.";
+            }else if(typeof input["mobile"] != 'number' && input["mobile"].length != 10){
               isValid = false;
-              errors["mobileNo"] = "Please enter valid phone number.";
-            }else if(typeof input["mobileNo"] == 'number' && input["mobileNo"].toString().length != 10){
+              errors["mobile"] = "Please enter valid phone number.";
+            }else if(typeof input["mobile"] == 'number' && input["mobile"].toString().length != 10){
                 isValid = false;
-                errors["mobileNo"] = "Please enter valid phone number.";
+                errors["mobile"] = "Please enter valid phone number.";
             }
           
           }
@@ -89,9 +99,11 @@ class ProfilePage extends React.Component {
     render() {
         const margin = {margin:'auto'};
         const { user, submitted } = this.state;
+    
         return (
-            <div className="col-md-12 col-md-offset-3" style={margin}>
-                <h2>User Profile</h2>
+            <div className="container">
+            <div className="col-md-12 col-md-offset-3" style={margin}><br/>
+                <center><h2>User Profile</h2></center>
                 <form name="form" onSubmit={this.handleSubmit} noValidate>
                     <div className="row">
                         <div className={'col-md-4 form-group' + (submitted && !user.firstName ? ' has-error' : '')}>
@@ -121,13 +133,13 @@ class ProfilePage extends React.Component {
                     </div>
                     <div className="row">
                        
-                        <div className={'col-md-4 form-group' + (submitted && !user.mobileNo ? ' has-error' : '')}>
-                            <label htmlFor="mobileNo">Mobile</label>
-                            <input type="number" className="form-control" name="mobileNo" value={user.mobileNo} onChange={this.handleChange} required />
-                            {submitted && !user.mobileNo &&
+                        <div className={'col-md-4 form-group' + (submitted && !user.mobile ? ' has-error' : '')}>
+                            <label htmlFor="mobile">Mobile</label>
+                            <input type="number" className="form-control" name="mobile" value={user.mobile} onChange={this.handleChange} required />
+                            {submitted && !user.mobile &&
                                 <div className="text-danger">Mobile no is required</div>
                             }
-                         <div className="text-danger">{this.state.errors.mobileNo}</div>
+                         <div className="text-danger">{this.state.errors.mobile}</div>
 
                         </div>
                         <div className={'col-md-4 form-group' + (submitted && !user.dept ? ' has-error' : '')}>
@@ -141,10 +153,10 @@ class ProfilePage extends React.Component {
                                 <div className="text-danger">Department is required</div>
                             }
                         </div>
-                        <div className={'col-md-4 form-group' + (submitted && !user.addrLand1 ? ' has-error' : '')}>
-                            <label htmlFor="addrLand1">Address Line1</label>
-                            <input type="text" className="form-control" name="addrLand1" value={user.addrLand1} onChange={this.handleChange} required />
-                            {submitted && !user.addrLand1 &&
+                        <div className={'col-md-4 form-group' + (submitted && !user.addr1 ? ' has-error' : '')}>
+                            <label htmlFor="addr1">Address Line1</label>
+                            <input type="text" className="form-control" name="addr1" value={user.addr1} onChange={this.handleChange} required />
+                            {submitted && !user.addr1 &&
                                 <div className="text-danger">Address Line1 is required</div>
                             }
                         </div>
@@ -152,10 +164,10 @@ class ProfilePage extends React.Component {
                     
                     <div className="row">
                        
-                        <div className={'col-md-4 form-group' + (submitted && !user.addrLand2 ? ' has-error' : '')}>
-                            <label htmlFor="addrLand2">Address Line2</label>
-                            <input type="text" className="form-control" name="addrLand2" value={user.addrLand2} onChange={this.handleChange} />
-                            {submitted && !user.addrLand2 &&
+                        <div className={'col-md-4 form-group' + (submitted && !user.addr2 ? ' has-error' : '')}>
+                            <label htmlFor="addr2">Address Line2</label>
+                            <input type="text" className="form-control" name="addr2" value={user.addr2} onChange={this.handleChange} />
+                            {submitted && !user.addr2 &&
                                 <div className="text-danger">Address Line2 is required</div>
                             }
                         </div>
@@ -200,16 +212,35 @@ class ProfilePage extends React.Component {
                                 <div className="text-danger">Pin Code is required</div>
                             }
                         </div>
+                        <div className={'col-md-4 form-group' + (submitted && !user.role ? ' has-error' : '')}>
+                                <label htmlFor="country">Role</label>
+                                <select className="form-control" name="role" value={user.role} onChange={this.handleChange}>
+                                    <option value="">Choose User Role</option>
+                                    <option value="normal">Normal Role</option>
+                                    <option value="admin">Admin Role</option>
+                                </select>                         
+                            {submitted && !user.role &&
+                        <div className="text-danger">Role is required</div>
+                            }
+                        </div>
                     </div>
                    
                     <div className="form-group">
-                        <button className="btn btn-primary">Update</button>
+                        <button className="btn btn-primary">Update</button>&nbsp;&nbsp;
+                       
+                        {(user.role=='admin') &&
+                             <Link to="/user" className="btn btn-success">Cancel</Link>
+                        }
+                        {(user.role=='normal') &&
+                             <Link to="/home" className="btn btn-success">Cancel</Link>
+                        }
                         {/* {registering &&
                             <img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
                         } */}
                         {/* <Link to="/login" className="btn btn-link">Cancel</Link> */}
                     </div>
                 </form>
+            </div>
             </div>
         );
     }
@@ -223,7 +254,8 @@ function mapState(state) {
 
 const actionCreators = {
   //  getUsers: userActions.getAll,
-  updateProfile: userActions.updateProfile
+  updateProfile: userActions.updateProfile,
+  getById: userActions.getById
 }
 
 const connectedProfilePage = connect(mapState, actionCreators)(ProfilePage);

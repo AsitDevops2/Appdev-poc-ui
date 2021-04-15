@@ -1,8 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-
+import { faUser,faKey } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { userActions } from '../_actions';
+
 
 class LoginPage extends React.Component {
     constructor(props) {
@@ -26,13 +28,18 @@ class LoginPage extends React.Component {
         this.setState({ [name]: value });
     }
 
-    handleSubmit(e) {
-        e.preventDefault();
+    
+    
 
+    handleSubmit(e) {
+        // let { user } = this.props;
+        // user = JSON.parse(localStorage.getItem('user'));
+        e.preventDefault();
         this.setState({ submitted: true });
         const { email, password } = this.state;
         if (email && password) {
             this.props.login(email, password);
+           
         }
     }
 
@@ -43,17 +50,18 @@ class LoginPage extends React.Component {
         const { email, password, submitted } = this.state;
         return (
             <div className="col-md-4 col-md-offset-3" style={margin}>
-                <h2>Login</h2>
+                <br/>
+                <h2>Login</h2><br/>
                 <form name="form" onSubmit={this.handleSubmit}>
                     <div className={'form-group' + (submitted && !email ? ' has-error' : '')}>
-                        <label htmlFor="email">Email</label>
+                        <FontAwesomeIcon icon={faUser}/>&nbsp;<label htmlFor="email">Email</label>
                         <input type="text" className="form-control" name="email" value={email} onChange={this.handleChange} required/>
                         {submitted && !email &&
                             <div className="text-danger">Email is required</div>
                         }
                     </div>
                     <div className={'form-group' + (submitted && !password ? ' has-error' : '')}>
-                        <label htmlFor="password">Password</label>
+                        <FontAwesomeIcon icon={faKey}/>&nbsp;<label htmlFor="password">Password</label>
                         <input type="password" className="form-control" name="password" value={password} onChange={this.handleChange} required/>
                         {submitted && !password &&
                             <div className="text-danger">Password is required</div>

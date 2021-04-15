@@ -44,6 +44,11 @@ export function users(state = {}, action) {
           return user;
         })
       };
+      case userConstants.GETBYID_SUCCESS:
+      // remove deleted user from state
+      return {
+        user:action.user
+      };
     default:
       return state
   }

@@ -5,12 +5,16 @@ export const userService = {
     login,
     logout,
     register,
+    addUser,
     getAll,
     getById,
     updateProfile,
     delete: _delete,    
-    resetPassword
+    resetPassword,
+   // editUser
 };
+
+
 
 function login(username, password) {
     const requestOptions = {
@@ -40,16 +44,7 @@ function getAll() {
         headers: authHeader()
     };
 
-    return fetch(`${config.apiUrl}/users`, requestOptions).then(handleResponse);
-}
-
-function getById(id) {
-    const requestOptions = {
-        method: 'GET',
-        headers: authHeader()
-    };
-
-    return fetch(`${config.apiUrl}/users/${id}`, requestOptions).then(handleResponse);
+    return fetch(`${config.apiUrl}/user/list`, requestOptions).then(handleResponse);
 }
 
 function register(user) {
@@ -59,7 +54,17 @@ function register(user) {
         body: JSON.stringify(user)
     };
 
-    return fetch(`${config.apiUrl}/vendor/register`, requestOptions).then(handleResponse);
+    return fetch(`${config.apiUrl1}/vendor/register`, requestOptions).then(handleResponse);
+}
+
+function addUser(user) {
+    const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(user)
+    };
+
+    return fetch(`${config.apiUrl1}/vendor/register`, requestOptions).then(handleResponse);
 }
 
 function updateProfile(user) {
@@ -68,8 +73,8 @@ function updateProfile(user) {
         headers: { ...authHeader(), 'Content-Type': 'application/json' },
         body: JSON.stringify(user)
     };
-
-    return fetch(`${config.apiUrl}/user/updateUser/${user.id}`, requestOptions).then(handleResponse);;
+ 
+    return fetch(`${config.apiUrl}/user/updateUser/${user.id}`, requestOptions).then(handleResponse);
 }
 
 // prefixed function name with underscore because delete is a reserved word in javascript
@@ -79,7 +84,7 @@ function _delete(id) {
         headers: authHeader()
     };
 
-    return fetch(`${config.apiUrl}/users/${id}`, requestOptions).then(handleResponse);
+    return fetch(`${config.apiUrl}/user/deleteUser/${id}`, requestOptions).then(handleResponse);
 }
 
 function resetPassword(email) {
@@ -89,12 +94,13 @@ function resetPassword(email) {
         body: JSON.stringify({email})
     };
 
-    return fetch(`${config.apiUrl}/vendor/resetPassword`, requestOptions).then(handleResponse);
+    return fetch(`${config.apiUrl1}/vendor/resetPassword`, requestOptions).then(handleResponse);
 }
 
 function handleResponse(response) {
     return response.text().then(text => {
         const data = text && JSON.parse(text);
+        //console.log(data);
         //if (!response.ok) {
             if (data.status === 401 || data.status === 400 || !response.ok) {
                 // auto logout if 401 response returned from api
@@ -107,7 +113,26 @@ function handleResponse(response) {
             // const error = (data && data.message) || response.statusText;
             // return Promise.reject(error);
         //}
-
+           // console.log(data.result);
         return data.result;
     });
+}
+// function editUser(id){
+//     const requestOptions = {
+//         method: 'GET',
+//         headers: { ...authHeader(), 'Content-Type': 'application/json' },
+//         // body: JSON.stringify(user)
+//     };
+
+//     return fetch(`${config.apiUrl}/user/getUser/${id}`, requestOptions).then(handleResponse);;
+
+// }
+
+function getById(id) {
+    const requestOptions = {
+        method: 'GET',
+        headers: authHeader()
+    };
+
+    return fetch(`${config.apiUrl}/user/getUser/${id}`, requestOptions).then(handleResponse);
 }

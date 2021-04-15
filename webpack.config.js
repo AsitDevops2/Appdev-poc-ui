@@ -31,7 +31,9 @@ module.exports = {
     externals: {
         // global app config object
         config: JSON.stringify({
-            apiUrl: 'http://localhost:8085'
+            apiUrl: 'http://localhost:8080',
+            apiUrl1: 'http://localhost:8085',
+            invUrl: 'http://localhost:3000'
         })
     }
 }

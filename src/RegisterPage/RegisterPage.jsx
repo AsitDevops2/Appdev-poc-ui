@@ -1,27 +1,26 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-
+import { blockInvalidChar } from "../_components/BlockCharacter";
 import { userActions } from '../_actions';
 
 class RegisterPage extends React.Component {
     constructor(props) {
         super(props);
-
         this.state = {
             user: {
                 firstName: '',
                 lastName: '',
                 email: '',
-                mobileNo:'',
+                mobile:'',
                 password: '',
                 country:'',
                 state:'',
                 city:'',
                 pin:'',
                 dept:'',
-                addrLand1:'',
-                addrLand2:''
+                addr1:'',
+                addr2:''
             },
             submitted: false,
             errors: {}
@@ -41,6 +40,8 @@ class RegisterPage extends React.Component {
             }
         });
     }
+
+    
     validate(){
         let input = this.state.user;
         let errors = {};
@@ -63,15 +64,16 @@ class RegisterPage extends React.Component {
             errors["email"] = "Please enter valid email address.";
           }
         }
-        if (typeof input["mobileNo"] !== "undefined") {
+        if (typeof input["mobile"] !== "undefined") {
 
             var pattern = new RegExp(/^[0-9\b]+$/);
-            if (!pattern.test(input["mobileNo"])) {
+            
+            if (!pattern.test(input["mobile"])) {
               isValid = false;
-              errors["mobileNo"] = "Please enter only number.";
-            }else if(input["mobileNo"].length != 10){
+              errors["mobile"] = "Please enter only number.";
+            }else if(input["mobile"].length != 10){
               isValid = false;
-              errors["mobileNo"] = "Please enter valid phone number.";
+              errors["mobile"] = "Please enter valid phone number.";
             }
           
           }
@@ -88,9 +90,10 @@ class RegisterPage extends React.Component {
 
         this.setState({ submitted: true });
         const { user } = this.state;
-        if (user.firstName && user.lastName && user.email && user.password && this.validate()) {
+        if (user.firstName && user.lastName && user.email && user.password && user.pin && this.validate()) {
             this.props.register(user);
         }
+        
     }
 
     render() {
@@ -139,13 +142,13 @@ class RegisterPage extends React.Component {
                     </div>
                     <div className="row">
                       
-                        <div className={'col-md-3 form-group' + (submitted && !user.mobileNo ? ' has-error' : '')}>
-                            <label htmlFor="mobileNo">Mobile</label>
-                            <input type="number" className="form-control" name="mobileNo" value={user.mobileNo} onChange={this.handleChange} required />
-                            {submitted && !user.mobileNo &&
+                        <div className={'col-md-3 form-group' + (submitted && !user.mobile ? ' has-error' : '')}>
+                            <label htmlFor="mobile">Mobile</label>
+                            <input type="number" className="form-control" name="mobile" value={user.mobile} onChange={this.handleChange} onKeyDown={blockInvalidChar} required />
+                            {submitted && !user.mobile &&
                                 <div className="text-danger">Mobile no is required</div>
                             }
-                         <div className="text-danger">{this.state.errors.mobileNo}</div>
+                         <div className="text-danger">{this.state.errors.mobile}</div>
 
                         </div>
                         <div className={'col-md-3 form-group' + (submitted && !user.dept ? ' has-error' : '')}>
@@ -159,17 +162,17 @@ class RegisterPage extends React.Component {
                                 <div className="text-danger">Department is required</div>
                             }
                         </div>
-                        <div className={'col-md-3 form-group' + (submitted && !user.addrLand1 ? ' has-error' : '')}>
-                            <label htmlFor="addrLand1">Address Line1</label>
-                            <input type="text" className="form-control" name="addrLand1" value={user.addrLand1} onChange={this.handleChange} required />
-                            {submitted && !user.addrLand1 &&
+                        <div className={'col-md-3 form-group' + (submitted && !user.addr1 ? ' has-error' : '')}>
+                            <label htmlFor="addr1">Address Line1</label>
+                            <input type="text" className="form-control" name="addr1" value={user.addr1} onChange={this.handleChange} required />
+                            {submitted && !user.addr1 &&
                                 <div className="text-danger">Address Line1 is required</div>
                             }
                         </div>
-                        <div className={'col-md-3 form-group' + (submitted && !user.addrLand2 ? ' has-error' : '')}>
-                            <label htmlFor="addrLand2">Address Line2</label>
-                            <input type="text" className="form-control" name="addrLand2" value={user.addrLand2} onChange={this.handleChange} />
-                            {submitted && !user.addrLand2 &&
+                        <div className={'col-md-3 form-group' + (submitted && !user.addr2 ? ' has-error' : '')}>
+                            <label htmlFor="addr2">Address Line2</label>
+                            <input type="text" className="form-control" name="addr2" value={user.addr2} onChange={this.handleChange} />
+                            {submitted && !user.addr2 &&
                                 <div className="text-danger">Address Line2 is required</div>
                             }
                         </div>
