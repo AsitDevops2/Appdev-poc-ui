@@ -226,25 +226,24 @@ class EditPage extends React.Component {
                                 <div className="text-danger">Pin Code is required</div>
                             }
                         </div>
-                        {(loggedUser.role=='admin') && 
-                        <div className={'col-md-4 form-group' + (submitted && !user.role ? ' has-error' : '')}>
-                                <label htmlFor="country">Role</label>
-                                <select className="form-control" name="role" value={user.role} onChange={this.handleChange}>
-                                    <option value="">Choose User Role</option>
-                                    <option value="normal">Normal Role</option>
-                                    <option value="admin">Admin Role</option>
-                                </select>                         
-                            {submitted && !user.role &&
-                                <div className="text-danger">Role is required</div>
-                            }
-                        </div>
-                        }
-                       
-                        {(loggedUser.role=='normal') &&
-                            <div className="col-md-4 form-group">  
-                                <label htmlFor="country">Role</label>  
-                                <input type="text" disabled className="form-control" name="role" value={user.role.toUpperCase()} />
-                            </div>
+                        {(loggedUser.role=='admin') 
+                            ?
+                                <div className={'col-md-4 form-group' + (submitted && !user.role ? ' has-error' : '')}>
+                                        <label htmlFor="country">Role</label>
+                                        <select className="form-control" name="role" value={user.role} onChange={this.handleChange}>
+                                            <option value="">Choose User Role</option>
+                                            <option value="normal">Normal Role</option>
+                                            <option value="admin">Admin Role</option>
+                                        </select>                         
+                                    {submitted && !user.role &&
+                                        <div className="text-danger">Role is required</div>
+                                    }
+                                </div>
+                            :
+                                <div className="col-md-4 form-group">  
+                                    <label htmlFor="role">Role</label>  
+                                    <input type="text" disabled className="form-control" name="role" value={user.role.toUpperCase()} />
+                                </div>
                         }
                         
                     </div>

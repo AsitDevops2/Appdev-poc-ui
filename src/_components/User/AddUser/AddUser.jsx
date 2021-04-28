@@ -229,7 +229,7 @@ class AddUser extends React.Component {
                             <div className={'col-md-3 form-group' + (submitted && !user.role ? ' has-error' : '')}>
                                 <label htmlFor="role">User Role</label>
                                 <select className="form-control" name="role" value={user.role} onChange={this.handleChange}>
-                                <option value="">Choose Department</option>
+                                <option value="">Choose Role</option>
                                     <option value="normal">Normal User</option>
                                     <option value="admin">Admin User</option>
                                 </select>

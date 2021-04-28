@@ -12,7 +12,8 @@ export const userActions = {
     resetPassword,
     updateProfile,
     addUser,
-    getById
+    getById,
+    getByParent
     // editUser
 };
 
@@ -106,6 +107,21 @@ function getAll() {
     function failure(error) { return { type: userConstants.GETALL_FAILURE, error } }
 }
 
+function getByParent(id) {
+    return dispatch => {
+        dispatch(request(id));
+
+        userService.getByParent(id)
+        .then(
+            users => dispatch(success(users)),
+                error => dispatch(failure(error.toString()))
+        );
+    };
+    function request() { return { type: userConstants.GETALL_REQUEST } }
+    function success(users) { return { type: userConstants.GETALL_SUCCESS, users } }
+    function failure(error) { return { type: userConstants.GETALL_FAILURE, error}}
+}
+
 // prefixed function name with underscore because delete is a reserved word in javascript
 function _delete(id) {
     return dispatch => {
@@ -122,6 +138,7 @@ function _delete(id) {
     function success(id) { return { type: userConstants.DELETE_SUCCESS, id } }
     function failure(id, error) { return { type: userConstants.DELETE_FAILURE, id, error } }
 }
+
 function resetPassword(email) {
     return dispatch => {
         dispatch(request(email));

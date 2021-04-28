@@ -25,7 +25,8 @@ class AddProduct extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
     componentDidMount() {
-        this.props.getCategory();
+        let loggedUser = JSON.parse(localStorage.getItem('user'));
+        this.props.getCategory(loggedUser.id);
         // console.log(this.props.getAll());
     }
 
@@ -56,10 +57,7 @@ class AddProduct extends React.Component {
             if (!pattern.test(input["description"])) {
               isValid = false;
               errors["description"] = "Please enter valid description.";
-            }else if(!input["description"].length < 3){
-                isValid = false;
-                errors["description"] = "Please enter valid description.";
-              }
+            }
         }
         if (typeof input["brand"] !== "undefined") {            
             var pattern = new RegExp(/^[a-zA-Z]+$/);
@@ -212,7 +210,8 @@ function mapState(state) {
 
 const actionCreators = {
     add: productActions.addProduct,
-    getCategory: categoryActions.getAllCategory
+    //getCategory: categoryActions.getAllCategory
+    getCategory:categoryActions.getCategoryByUser
 }
 
 const connectedAddProduct = connect(mapState, actionCreators)(AddProduct);

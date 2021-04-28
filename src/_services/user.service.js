@@ -11,6 +11,7 @@ export const userService = {
     updateProfile,
     delete: _delete,    
     resetPassword,
+    getByParent
    // editUser
 };
 
@@ -45,6 +46,15 @@ function getAll() {
     };
 
     return fetch(`${config.apiUrl}/user/list`, requestOptions).then(handleResponse);
+}
+
+function getByParent(id) {
+    const requestOptions = {
+        method: 'GET',
+        headers: authHeader()
+    };
+
+    return fetch(`${config.apiUrl}/user/listByParent/${id}`, requestOptions).then(handleResponse);
 }
 
 function register(user) {
@@ -117,16 +127,6 @@ function handleResponse(response) {
         return data.result;
     });
 }
-// function editUser(id){
-//     const requestOptions = {
-//         method: 'GET',
-//         headers: { ...authHeader(), 'Content-Type': 'application/json' },
-//         // body: JSON.stringify(user)
-//     };
-
-//     return fetch(`${config.apiUrl}/user/getUser/${id}`, requestOptions).then(handleResponse);;
-
-// }
 
 function getById(id) {
     const requestOptions = {

@@ -15,11 +15,22 @@ class CategoryList extends React.Component {
     
     constructor(props) {
         super(props);
+        this.deleteCategory = this.deleteCategory.bind(this);
     }
    
    
     componentDidMount() {
-        this.props.getAll();
+        let loggedUser = JSON.parse(localStorage.getItem('user'));
+        if(loggedUser.id==1)
+            this.props.getAll();
+        else
+            this.props.getByUser(loggedUser.id);
+    }
+
+    deleteCategory(id) {
+        if (confirm('Sure want to delete?') && id != null)
+            this.props.deleteCategory(id);
+            window.location.reload();
     }
 
     render() {
@@ -37,15 +48,19 @@ class CategoryList extends React.Component {
                 <tr>
                     <th>Name</th>
                     <th>Description</th>
+                    <th>Actions</th>
                 </tr>
                 </thead>                
                 <tbody>
                     {categories.items.map((category, index) => {
                         
                         return(
-                            <tr key={category.id}>
+                            <tr key={category._id}>
                                 <td>{category.name}</td>   
                                 <td>{category.description}</td>
+                                <td>
+                                    <button className="btn btn-danger" onClick={() => this.deleteCategory(category._id)} style={{ marginLeft: '10px',width:'40%'}}><FontAwesomeIcon icon={faTrashAlt} /></button>
+                                </td>
                             </tr>                            
                         )                      
             })}
@@ -66,7 +81,9 @@ function mapState(state) {
 
 
 const actionCreators = {
-  getAll: categoryActions.getAllCategory
+  getAll: categoryActions.getAllCategory,
+  getByUser:categoryActions.getCategoryByUser,
+  deleteCategory:categoryActions.deleteCategory
 }
 
 const connectedCategoryList = connect(mapState, actionCreators)(CategoryList);

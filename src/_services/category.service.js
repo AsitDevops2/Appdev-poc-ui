@@ -3,10 +3,19 @@ import { authHeader } from '../_helpers';
 
 export const categoryService = {
     addCategory,
-    getAllCategory
+    getAllCategory,
+    getCategoryByUser,
+    deleteCategory
 };
 
+function getCategoryByUser(id) {
+    const requestOptions = {
+        method: 'GET',
+        headers: authHeader()
+    };
 
+    return fetch(`${config.apiUrl}/user/getCategory/${id}`, requestOptions).then(handleResponse);
+}
 
 function getAllCategory() {
     const requestOptions = {
@@ -23,6 +32,15 @@ function addCategory(category) {
         body: JSON.stringify(category)
     };
     return fetch(`${config.invUrl}/product/category/addCategory`, requestOptions).then(handleResponse);
+}
+
+function deleteCategory(id) {
+    const requestOptions = {
+        method: 'DELETE',
+        headers: authHeader()
+    };
+
+    return fetch(`${config.invUrl}/product/category/deleteCategory/${id}`,requestOptions).then(handleResponse);
 }
 
 

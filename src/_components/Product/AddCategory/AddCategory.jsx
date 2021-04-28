@@ -6,11 +6,12 @@ import { categoryActions } from '../../../_actions';
 class AddCategory extends React.Component {
     constructor(props) {
         super(props);
+        let loggedUser = JSON.parse(localStorage.getItem('user'));
         this.state = {
             category: {
                 name:'',
-                description:''
-                
+                description:'',
+                userId:loggedUser.id                
             },
             submitted: false,
             errors: {}
